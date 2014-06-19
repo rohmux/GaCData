@@ -1,20 +1,32 @@
-## Reading Features
+## Reading Features and fixing names (remove "-" "()")
 colheaders <- read.table("data/features.txt")
+colheaders[,2] <- gsub("[-(),]", "", colheaders[,2])
 
-## Reading Testset
-# Samples
-xtest <- data.frame(read.table("data/test/X_test.txt"))
+getdataset <- function(type){
+    path <- paste("data/",type,"/", sep ="")
+    ## Reading Testset
+    # Samples
+    xset <- data.frame(read.table(paste(path, "X_", type, ".txt", sep ="")))
+    
+    # Sampleactivity
+    yset <- read.table(paste(path, "y_", type, ".txt", sep =""))
+    
+    # Samplesubject
+    subjectnr <- read.table(paste(path, "subject_", type, ".txt", sep =""))
+    
+    # Assigning the Features Column 2 as Variablenames to xset (Column 1 is just a numeration, Column 2 is the real name)
+    names(xset) <- tolower(colheaders[,2])
+    
+    # Stripping out unwanted Variables
+    toMatch <- c("mean", "std")
+    names(xset[, grep(paste(toMatch,collapse="|"), names(xset))])
+    
+    # Merge Subject and Activity with Samples
+    xset <- cbind(subjectnr, yset, xset)
+    names(xset)[1] <- "subjectnr"
+    names(xset)[2] <- "activity"
+    xset
+}
 
-# Sampleactivity
-ytest <- read.table("data/test/y_test.txt")
-
-# Samplesubject
-stest <- read.table("data/test/subject_test.txt")
-
-# Assigning the Features Column 2 as Variablenames to xtest (Column 1 is just a numeration, Column 2 is the real name)
-names(xtest) <- tolower(colheaders[,2])
-
-# Merge Subject and Activity with Samples
-xtest <- cbind(stest, ytest, xtest)
-names(xtest)[1] <- "subjectnr"
-names(xtest)[2] <- "activity"
+trainset <- getdataset("train")
+testset <- getdataset("test")
