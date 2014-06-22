@@ -1,3 +1,4 @@
+library(reshape)
 library(reshape2)
 ## Reading Features and fixing names (remove "-" "()")
 colheaders <- read.table("data/features.txt")
@@ -24,7 +25,7 @@ getdataset <- function(type){
     # Samplesubject
     subjectnr <- read.table(paste(path, "subject_", type, ".txt", sep =""))
     
-    # Assigning the Features Column 2 as Variablenames to xset (Column 1 is just a numeration, Column 2 is the real name)
+    # Assigning the Features Column 2 for Variablenames to xset (Column 1 is just a numeration, Column 2 is the real name)
     names(xset) <- tolower(colheaders[,2])
     
     # Stripping out unwanted Variables
