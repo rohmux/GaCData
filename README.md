@@ -72,9 +72,13 @@ Tidy data set according the coursera project goal.
 
 ### Following code will finaly give you the tidy dataset and write it as csv (ends with txt) to your harddrive
 trainset <- getdataset("train")
+
 testset <- getdataset("test")
+
 mergedset <- mergeset(trainset, testset)
+
 tidyset <- createtidyset(mergedset)
+
 writeset(tidyset)
 
 ## Further information
